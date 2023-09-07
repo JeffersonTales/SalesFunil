@@ -1,3 +1,9 @@
+using SalesFunil.desktop._Repositories;
+using SalesFunil.desktop.Models;
+using SalesFunil.desktop.Presenters;
+using SalesFunil.desktop.Views;
+using System.Configuration;
+
 namespace SalesFunil.desktop {
     internal static class Program {
         /// <summary>
@@ -5,10 +11,14 @@ namespace SalesFunil.desktop {
         /// </summary>
         [STAThread]
         static void Main() {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            string sqlConnectionString = ConfigurationManager.ConnectionStrings["SqlConnection"].ConnectionString;
+            
+            IPetView view = new PetView();
+            IPetRepository repository = new PetRepository(sqlConnectionString);
+            new PetPresenter(view, repository);
+            Application.Run((Form)view);
         }
     }
 }
